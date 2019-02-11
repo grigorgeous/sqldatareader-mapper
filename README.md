@@ -26,10 +26,10 @@ Here is an example of the usage:
     var mappedObject = new SqlDataReaderMapper<DBClass>(reader)
          .NameTransformers("_", "")
          .ForMember("CurrencyId", typeof(int))
-         .ForMember("IsModerator", typeof(Boolean))
          .ForMember("CurrencyCode", "Code")
          .ForMember("CreatedByUser", typeof(String), "User").Trim()
-         .ForMemberManual("CountryCode", val => val.ToString().Substring(0, 5))
+         .ForMemberManual("CountryCode", val => val.ToString().Substring(0, 10))
+         .ForMemberManual("ZipCode", val => val.ToString().Substring(0, 5), "ZIP")
          .Build();
          
 Or simply:
