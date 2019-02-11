@@ -43,4 +43,4 @@ Either commands, from Package Manager Console or .NET Core CLI, will download an
 Copyright © 2019 Grigory and contributors
 
 ### License
-SqlDataReaderMapper is licensed under GPL-3.0. Refer to license.txt for more information.
+SqlDataReaderMapper is licensed under GPL-3.0. Refer to LICENSE for more information.
