@@ -1,25 +1,22 @@
-SqlDataReader-Mapper
+SqlDataReader mapper
 ======
 Simple C# SqlDataReader object mapper. Allows you to map a SqlDataReader to the particular objects.
 
 Supports simple property mapping, property name transformations, string trimming, manual property binding by name, type changing, function binding, etc.
 
-[FastMember](https://www.nuget.org/packages/FastMember/) package is needed in order to use this library.
+### Installing SqlDataReaderMapper
 
-### Installing SqlDataReader-Mapper
-
-First, you should install [FastMember](https://www.nuget.org/packages/FastMember/):
+You should install [SqlDataReaderMapper](https://www.nuget.org/packages/SqlDataReaderMapper/):
     
-    Install-Package FastMember
+    Install-Package SqlDataReaderMapper
 
 Or via the .NET Core command line interface:
 
-    dotnet add package FastMember
+    dotnet add package SqlDataReaderMapper
 
-Then, you should add SqlDataReader-Mapper library to your project as a reference and include both libraries into the project:
+Then, use the library in the project:
 
-    using FastMember;
-    using ReaderMapper;
+    using SqlDataReaderMapper;
     
 Here is an example of the usage:
 
@@ -37,4 +34,4 @@ Or simply:
     var mappedObject = new SqlDataReaderMapper<DBClass>(reader)
          .Build();
 
-Either commands, from Package Manager Console or .NET Core CLI, will download and install SqlDataReader-Mapper and all required dependencies.
+Either commands, from Package Manager Console or .NET Core CLI, will download and install SqlDataReaderMapper and all required dependencies (e.g., [FastMember](https://www.nuget.org/packages/FastMember/).
