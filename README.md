@@ -11,11 +11,11 @@ Supports simple property mapping, property name transformations, string trimming
 
 You should install [SqlDataReaderMapper](https://www.nuget.org/packages/SqlDataReaderMapper/):
     
-    Install-Package SqlDataReaderMapper
+    PM> Install-Package SqlDataReaderMapper
 
 Or via the .NET Core command line interface:
 
-    dotnet add package SqlDataReaderMapper
+    PM> dotnet add package SqlDataReaderMapper
 
 Then, use the library in the project:
 
