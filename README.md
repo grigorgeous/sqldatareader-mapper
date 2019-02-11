@@ -23,7 +23,7 @@ Then, you should add SqlDataReader-Mapper library to your project as a reference
     
 Here is an example of the usage:
 
-    var mappedObject = new ReaderMapper<DBClass>(reader)
+    var mappedObject = new SqlDataReaderMapper<DBClass>(reader)
          .NameTransformers("_", "")
          .ForMember("CurrencyId", typeof(int))
          .ForMember("IsModerator", typeof(Boolean))
@@ -34,7 +34,7 @@ Here is an example of the usage:
          
 Or simply:
 
-    var mappedObject = new ReaderMapper<DBClass>(reader)
+    var mappedObject = new SqlDataReaderMapper<DBClass>(reader)
          .Build();
 
 Either commands, from Package Manager Console or .NET Core CLI, will download and install SqlDataReader-Mapper and all required dependencies.
