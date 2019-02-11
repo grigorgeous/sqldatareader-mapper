@@ -34,4 +34,4 @@ Or simply:
     var mappedObject = new SqlDataReaderMapper<DBClass>(reader)
          .Build();
 
-Either commands, from Package Manager Console or .NET Core CLI, will download and install SqlDataReaderMapper and all required dependencies (e.g., [FastMember](https://www.nuget.org/packages/FastMember/).
+Either commands, from Package Manager Console or .NET Core CLI, will download and install SqlDataReaderMapper and all required dependencies (e.g., [FastMember](https://www.nuget.org/packages/FastMember/)).
