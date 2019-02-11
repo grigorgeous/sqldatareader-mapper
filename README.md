@@ -1,7 +1,7 @@
 SqlDataReader mapper
 ======
-[![NuGet](https://img.shields.io/nuget/dt/SqlDataReaderMapper.svg)](https://www.nuget.org/packages/SqlDataReaderMapper) 
-[![NuGet](https://img.shields.io/nuget/vpre/SqlDataReaderMapper.svg)](https://www.nuget.org/packages/SqlDataReaderMapper)
+[![NuGet](https://img.shields.io/nuget/dt/sqldatareadermapper.svg)](https://www.nuget.org/packages/SqlDataReaderMapper) 
+[![NuGet](https://img.shields.io/nuget/vpre/sqldatareadermapper.svg)](https://www.nuget.org/packages/SqlDataReaderMapper)
 
 Simple C# SqlDataReader object mapper. Allows you to map a SqlDataReader to the particular objects.
 
