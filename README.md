@@ -40,7 +40,10 @@ Or simply:
 Either commands, from Package Manager Console or .NET Core CLI, will download and install SqlDataReaderMapper and all required dependencies (e.g., [FastMember](https://www.nuget.org/packages/FastMember/)).
 
 ### Copyright
-Copyright © 2019 Grigory and contributors
+Copyright © 2019 Grigory and contributors.
 
 ### License
 SqlDataReaderMapper is licensed under GPL-3.0. Refer to LICENSE for more information.
+
+### What's next
+I'm planning to get rid of the external dependencies to make this mapper much simpler and more lightweight.
