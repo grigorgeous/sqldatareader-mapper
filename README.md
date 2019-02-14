@@ -18,11 +18,11 @@ Or via the .NET Core command line interface:
     PM> dotnet add package SqlDataReaderMapper
 
 Then, use the library in the project:
-
+```csharp
     using SqlDataReaderMapper;
-    
+```    
 Here is an example of the usage:
-
+```csharp
     var mappedObject = new SqlDataReaderMapper<DBClass>(reader)
          .NameTransformers("_", "")
          .ForMember("CurrencyId", typeof(int))
@@ -31,12 +31,12 @@ Here is an example of the usage:
          .ForMemberManual("CountryCode", val => val.ToString().Substring(0, 10))
          .ForMemberManual("ZipCode", val => val.ToString().Substring(0, 5), "ZIP")
          .Build();
-         
+```         
 Or simply:
-
+```csharp
     var mappedObject = new SqlDataReaderMapper<DBClass>(reader)
          .Build();
-
+```
 Either commands, from Package Manager Console or .NET Core CLI, will download and install SqlDataReaderMapper and all required dependencies (e.g., [FastMember](https://www.nuget.org/packages/FastMember/)).
 
 ### Copyright
