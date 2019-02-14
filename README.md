@@ -1,4 +1,4 @@
-SqlDataReader mapper
+﻿SqlDataReader mapper
 ======
 [![NuGet](https://img.shields.io/nuget/dt/sqldatareadermapper.svg)](https://www.nuget.org/packages/SqlDataReaderMapper) 
 [![NuGet](https://img.shields.io/nuget/vpre/sqldatareadermapper.svg)](https://www.nuget.org/packages/SqlDataReaderMapper)
@@ -20,7 +20,7 @@ Or via the .NET Core command line interface:
 Then, use the library in the project:
 ```csharp
     using SqlDataReaderMapper;
-```    
+```
 Here is an example of the usage:
 ```csharp
     var mappedObject = new SqlDataReaderMapper<DBClass>(reader)
@@ -31,7 +31,7 @@ Here is an example of the usage:
          .ForMemberManual("CountryCode", val => val.ToString().Substring(0, 10))
          .ForMemberManual("ZipCode", val => val.ToString().Substring(0, 5), "ZIP")
          .Build();
-```         
+```
 Or simply:
 ```csharp
     var mappedObject = new SqlDataReaderMapper<DBClass>(reader)
