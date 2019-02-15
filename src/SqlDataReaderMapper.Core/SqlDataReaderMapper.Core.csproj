@@ -44,7 +44,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="FastMember, Version=1.4.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\FastMember\1.4.1\lib\net461\FastMember.dll</HintPath>
+      <HintPath>../../packages/Fastmember.1.4.1/lib/net461/FastMember.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
