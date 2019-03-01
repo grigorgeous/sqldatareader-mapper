@@ -1,11 +1,12 @@
 ﻿using System;
-using FastMember;
 using System.Collections.Generic;
 using System.Linq;
 using System.Data;
+using System.Linq.Expressions;
 
 namespace SqlDataReaderMapper.Core
 {
+
     /// <summary>
     /// Maps SqlDataReader to the provided object.
     /// </summary>
@@ -13,10 +14,10 @@ namespace SqlDataReaderMapper.Core
     /// <example>
     /// var mappedObject = new SqlDataReaderMapper<DBRes>(reader)
     ///     .NameTransformers("_", "")
-    ///     .ForMember("CurrencyId", typeof(int))
-    ///     .ForMember("IsModerator", typeof(Boolean))
+    ///     .ForMember<int>("CurrencyId")
+    ///     .ForMember<Boolean>("IsModerator")
     ///     .ForMember("CurrencyCode", "Code")
-    ///     .ForMember("CreatedByUser", typeof(String), "User").Trim()
+    ///     .ForMember<string>("CreatedByUser", "User").Trim()
     ///     .ForMemberManual("CountryCode", val => val.ToString().Substring(0, 5))
     ///     .ForMemberManual("CountryCode", val => val.ToString().Substring(0, 5), "Country")
     ///     .Build();
@@ -26,14 +27,11 @@ namespace SqlDataReaderMapper.Core
         private readonly IDataReader _reader;
         private readonly List<MapperConfig> _config = new List<MapperConfig>();
         private Tuple<string, string> _nameModifier;
-        private readonly T _typeObject = new T();
-        private TypeAccessor _accessor = TypeAccessor.Create(typeof(T));
-        private readonly MemberSet _members;
+        private ObjectReader<T> _typeObject = new ObjectReader<T>().CreateObjectMap();
         private int _fieldNumber;
 
         public SqlDataReaderMapper(IDataReader reader)
         {
-            _members = _accessor.GetMembers();
             _reader = reader;
         }
 
@@ -47,11 +45,11 @@ namespace SqlDataReaderMapper.Core
             {
                 if (!_reader.IsDBNull(_fieldNumber))
                 {
-                    ProcessFieldMapping();
+                    ProcessFieldMapping(); 
                 }
             }
 
-            return _typeObject;
+            return _typeObject.Value;
         }
 
         /// <summary>
@@ -95,7 +93,13 @@ namespace SqlDataReaderMapper.Core
         /// <returns></returns>
         public SqlDataReaderMapper<T> ForMember(string fromProperty, string toProperty = null)
         {
-            ForMember(fromProperty, null, toProperty ?? fromProperty);
+            _config.Add(new MapperConfig()
+            {
+                FromProperty = fromProperty,
+                NewType = null,
+                ToProperty = toProperty ?? fromProperty
+            });
+
             return this;
         }
 
@@ -107,6 +111,7 @@ namespace SqlDataReaderMapper.Core
         /// <param name="newType">New type for the property in destination class.</param>
         /// <param name="toProperty">Property in destination class.</param>
         /// <returns></returns>
+        [Obsolete("This overload has been deprecated. Use generics to pass destination type instead.")]
         public SqlDataReaderMapper<T> ForMember(string fromProperty, Type newType, string toProperty = null)
         {
             _config.Add(new MapperConfig() {
@@ -120,7 +125,30 @@ namespace SqlDataReaderMapper.Core
 
         /// <summary>
         /// Maps property in SqlDataReader to the particular property in class.
-        /// Converts SqlDataReader's the way you specify in manualBindFunc.
+        /// Converts SqlDataReader's value into new particular type.
+        /// </summary>
+        /// <typeparam name="TTarget">Destination type</typeparam>
+        /// <param name="fromProperty">Property in SqlDataReader.</param>
+        /// <param name="toProperty">Property in destination class.</param>
+        /// <returns></returns>
+        public SqlDataReaderMapper<T> ForMember<TTarget>(string fromProperty, string toProperty = null)
+        {
+            if (!typeof(TTarget).IsTrulyPrimitive())
+                throw new ArgumentOutOfRangeException("The provided type is not a primitive or nullable type");
+
+            _config.Add(new MapperConfig
+            {
+                FromProperty = fromProperty,
+                NewType = typeof(TTarget),
+                ToProperty = toProperty
+            });
+
+            return this;
+        }
+
+        /// <summary>
+        /// Maps property in SqlDataReader to the particular property in class.
+        /// Converts SqlDataReader's value the way you specify in manualBindFunc.
         /// </summary>
         /// <param name="fromProperty">Property in SqlDataReader.</param>
         /// <param name="manualBindFunc">The way to process the sql value.</param>
@@ -174,28 +202,33 @@ namespace SqlDataReaderMapper.Core
             MapperConfig fieldMap = null;
             string destinationFieldName = PrepareDestinationFieldName(ref fieldMap);
 
-            // Find the destination member in object by its name.
-            var destMember = _members.FirstOrDefault(m => string.Equals(
-                m.Name, destinationFieldName, StringComparison.OrdinalIgnoreCase));
+            // Find the destination member name and type.
+            var destMemberName = _typeObject.Members.FirstOrDefault(m => string.Equals(
+              m.Name, destinationFieldName, StringComparison.OrdinalIgnoreCase))?.Name;
 
-            if (destMember != null)
+            if (destMemberName != null)
             {
-                object destValue = PrepareDestinationFieldValue(destMember, fieldMap, _fieldNumber);
+                var destMemberType = _typeObject.GetMemberType(destMemberName);
+                object destValue = PrepareDestinationFieldValue(destMemberType, fieldMap, _fieldNumber);
 
                 // Try to cast and assign the destination value to its destination field.
                 try
                 {
-                    _accessor[_typeObject, destMember.Name] = destValue;
+                    _typeObject[destMemberName] = destValue;
                 }
                 catch (InvalidCastException)
                 {
                     throw new InvalidCastException(
-                        $"Cast from {destValue.GetType()} to {destMember.Type} is not valid.");
+                        $"Cast from {destValue.GetType()} to {destMemberType} is not valid");
                 }
+            }
+            else
+            {
+                throw new MemberAccessException($"{destinationFieldName} not found in destination object");
             }
         }
 
-        private object PrepareDestinationFieldValue(Member destMember, MapperConfig fieldMap, int fieldNumber)
+        private object PrepareDestinationFieldValue(Type destMemberType, MapperConfig fieldMap, int fieldNumber)
         {
             // Set destination value and change its type if requested.
             object destValue = _reader.GetValue(fieldNumber);
@@ -208,7 +241,7 @@ namespace SqlDataReaderMapper.Core
             }
             else
             {
-                var destType = fieldMap?.NewType ?? destMember.Type;
+                var destType = fieldMap?.NewType ?? destMemberType;
                 destValue = ChangeType(_reader.GetValue(fieldNumber), destType);
             }
 
@@ -226,20 +259,20 @@ namespace SqlDataReaderMapper.Core
             // Get source field name from SqlDataReader.
             string sourceFieldName = _reader.GetName(_fieldNumber);
 
-            // Check whether we have a configuration for this field name and modify the name if destination field name
-            // was provided. Otherwise, use source field name.
+            // Check whether we have a configuration for this field name and modify the name
+            // if destination field name was provided. Otherwise, use source field name.
             fieldMap = _config.Find(m => m.FromProperty == sourceFieldName);
             string destFieldName = fieldMap?.ToProperty ?? sourceFieldName;
 
             // Apply name transformers if any.
-            destFieldName = ApplyNameTransformers(_members, destFieldName);
+            destFieldName = ApplyNameTransformers(destFieldName);
 
             return destFieldName;
         }
 
-        private string ApplyNameTransformers(MemberSet members, string destFieldName)
+        private string ApplyNameTransformers(string destFieldName)
         {
-            if (_nameModifier != null && !members.Any(m => m.Name == destFieldName))
+            if (_nameModifier != null && !_typeObject.Members.Any(m => m.Name == destFieldName))
             {
                 destFieldName = destFieldName.Replace(_nameModifier.Item1, _nameModifier.Item2);
             }

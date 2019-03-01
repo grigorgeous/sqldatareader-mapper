@@ -109,16 +109,45 @@ namespace SqlDataReaderMapper.Tests
             // Act
             while (moqDataReader.Read())
             {
+                #pragma warning disable CS0618 // Type or member is obsolete
                 mappedObject = new SqlDataReaderMapper<DTOObject>(moqDataReader)
                     .ForMemberManual("FirstName", val => val.ToString().Substring(0, 2))
                     .ForMemberManual("LastName", val => val.ToString().Substring(0, 3))
                     .Build();
+                #pragma warning restore CS0618 // Type or member is obsolete
             }
 
             // Assert
             mappedObject.FirstName.ShouldBe("Jo");
             mappedObject.LastName.ShouldBe("Smi");
         }
+
+        /*        
+        [TestMethod]
+        public void ObjectMappingWithForMemberSubstringTest()
+        {
+            // Assign
+            var mappedObject = new DTOObject();
+            var moqDataReader = MockIDataReader(new DTOObject
+            {
+                UserId = 5,
+                FirstName = "John",
+                LastName = "Smith"
+            });
+
+            // Act
+            while (moqDataReader.Read())
+            {
+                mappedObject = new SqlDataReaderMapper<DTOObject>(moqDataReader)
+                    .ForMember("FirstName", val => val.ToString().Substring(0, 2))
+                    .ForMember("LastName", val => val.ToString().Substring(0, 3))
+                    .Build();
+            }
+
+            // Assert
+            mappedObject.FirstName.ShouldBe("Jo");
+            mappedObject.LastName.ShouldBe("Smi");
+        }*/
 
         [TestMethod]
         public void ObjectMappingWithForMemberChangeTypeTest()
@@ -134,7 +163,7 @@ namespace SqlDataReaderMapper.Tests
             while (moqDataReader.Read())
             {
                 mappedObject = new SqlDataReaderMapper<DTOObject>(moqDataReader)
-                    .ForMember("UserCode", typeof(int), "UserId")
+                    .ForMember<int>("UserCode", "UserId")
                     .Build();
             }
 
@@ -156,12 +185,32 @@ namespace SqlDataReaderMapper.Tests
             while (moqDataReader.Read())
             {
                 mappedObject = new SqlDataReaderMapper<DTOObject>(moqDataReader)
-                    .ForMember("UserCode", typeof(int?), "UserId")
+                    .ForMember<int?>("UserCode", "UserId")
                     .Build();
             }
 
             // Assert
             mappedObject.UserId.ShouldBe(5);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentOutOfRangeException))]
+        public void ObjectMappingWithForMemberChangeTypeToNonPrimitiveTypeTest()
+        {
+            // Assign
+            var mappedObject = new DTOObject();
+            var moqDataReader = MockIDataReader(new DTOObjectWithDifferentNameAndType
+            {
+                UserCode = "5",
+            });
+
+            // Act
+            while (moqDataReader.Read())
+            {
+                mappedObject = new SqlDataReaderMapper<DTOObject>(moqDataReader)
+                    .ForMember<DTOObject>("UserCode", "UserId")
+                    .Build();
+            }
         }
 
         [TestMethod]
@@ -179,7 +228,7 @@ namespace SqlDataReaderMapper.Tests
             while (moqDataReader.Read())
             {
                 mappedObject = new SqlDataReaderMapper<DTOObject>(moqDataReader)
-                    .ForMember("UserCode", typeof(Boolean), "UserId")
+                    .ForMember<Boolean>("UserCode", "UserId")
                     .Build();
             }
         }
@@ -204,6 +253,26 @@ namespace SqlDataReaderMapper.Tests
 
             // Assert
             mappedObject.FirstName.ShouldBe("John");
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(MemberAccessException))]
+        public void ObjectMappingWithInvalidCast()
+        {
+            // Assign
+            var mappedObject = new DTOObject();
+            var moqDataReader = MockIDataReader(new DTOObjectWithDifferentNameAndType
+            {
+                UserCode = "XYZ",
+            });
+
+            // Act
+            while (moqDataReader.Read())
+            {
+                mappedObject = new SqlDataReaderMapper<DTOObject>(moqDataReader)
+                    .ForMember("UserCode").Trim()
+                    .Build();
+            }
         }
     }
 }
