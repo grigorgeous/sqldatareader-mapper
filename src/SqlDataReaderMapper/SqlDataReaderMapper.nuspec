@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>SqlDataReaderMapper</id>
+    <version>$version$</version>
+    <title>SqlDataReaderMapper</title>
+    <authors>Grigorgeous</authors>
+    <owners>Grigorgeous</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <license type="file">LICENSE</license>
+    <projectUrl>https://github.com/grigorgeous/sqldatareader-mapper/</projectUrl>
+    <description>Simple C# SqlDataReader object mapper. Allows you to map a SqlDataReader to the particular objects. Supports simple property mapping, property name transformations, string trimming, manual property binding by name, type changing, function binding, etc.</description>
+    <tags>sqldatareader datareader reader mapper mapping map object idatareader</tags>
+  </metadata>
+  <files>
+    <file src="lib\net461\SqlDataReaderMapper.dll" target="lib\net461\SqlDataReaderMapper.dll" />
+    <file src="LICENSE" target="LICENSE" />
+  </files>
+</package>

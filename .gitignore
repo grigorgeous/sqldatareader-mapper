@@ -1,8 +1,11 @@
 v15
 Debug
-FastMember.1.4.1
 /.axoCover
 /TestResults
 /lib/net461
 /packages
 /.vs
+/src/SqlDataReaderMapper/bin
+/src/SqlDataReaderMapper/obj
+/test/SqlDataReaderMapper.Tests/bin
+/test/SqlDataReaderMapper.Tests/obj

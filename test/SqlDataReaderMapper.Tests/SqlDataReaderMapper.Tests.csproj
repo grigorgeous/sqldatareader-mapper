@@ -72,9 +72,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\SqlDataReaderMapper.Core\SqlDataReaderMapper.Core.csproj">
+    <ProjectReference Include="..\..\src\SqlDataReaderMapper\SqlDataReaderMapper.csproj">
       <Project>{218c4dc5-345b-4b15-bbe5-a70f579627c9}</Project>
-      <Name>SqlDataReaderMapper.Core</Name>
+      <Name>SqlDataReaderMapper</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

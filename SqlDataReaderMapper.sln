@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27703.2018
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SqlDataReaderMapper.Core", "src\SqlDataReaderMapper.Core\SqlDataReaderMapper.Core.csproj", "{218C4DC5-345B-4B15-BBE5-A70F579627C9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SqlDataReaderMapper", "src\SqlDataReaderMapper\SqlDataReaderMapper.csproj", "{218C4DC5-345B-4B15-BBE5-A70F579627C9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SqlDataReaderMapper.Tests", "test\SqlDataReaderMapper.Tests\SqlDataReaderMapper.Tests.csproj", "{071C1097-25BC-4B16-9936-1E7DE2E300A8}"
 EndProject
@@ -26,7 +26,8 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		        SolutionGuid = {C9719247-F811-40FF-A5DC-07A848B28692}
-		SolutionGuid = {EF7BD6CB-C55C-44C9-843D-BD87E5345620}
+		                SolutionGuid = {C9719247-F811-40FF-A5DC-07A848B28692}
+		        SolutionGuid = {EF7BD6CB-C55C-44C9-843D-BD87E5345620}
+		SolutionGuid = {173EF2CA-27AA-4224-AFB2-14992BD1E846}
 	EndGlobalSection
 EndGlobal
