@@ -26,9 +26,9 @@ Here is an example of the usage:
 ```csharp
     var mappedObject = new SqlDataReaderMapper<DBClass>(reader)
          .NameTransformers("_", "")
-         .ForMember("CurrencyId", typeof(int))
+         .ForMember<int>("CurrencyId")
          .ForMember("CurrencyCode", "Code")
-         .ForMember("CreatedByUser", typeof(String), "User").Trim()
+         .ForMember<string>("CreatedByUser", "User").Trim()
          .ForMemberManual("CountryCode", val => val.ToString().Substring(0, 10))
          .ForMemberManual("ZipCode", val => val.ToString().Substring(0, 5), "ZIP")
          .Build();
@@ -47,4 +47,4 @@ Copyright © 2019 Grigory and contributors.
 SqlDataReaderMapper is licensed under GPL-3.0. Refer to LICENSE for more information.
 
 ### What's next
-I'm planning to get rid of the external dependencies to make this mapper much simpler and more lightweight.
+I'm planning to make this library static.
