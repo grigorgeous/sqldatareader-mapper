@@ -6,7 +6,6 @@ using System.Linq.Expressions;
 
 namespace SqlDataReaderMapper
 {
-
     /// <summary>
     /// Maps SqlDataReader to the provided object.
     /// </summary>
