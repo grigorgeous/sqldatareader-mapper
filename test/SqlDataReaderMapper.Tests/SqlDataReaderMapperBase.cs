@@ -7,7 +7,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using SqlDataReaderMapper;
 
 namespace SqlDataReaderMapper.Tests
 {
