@@ -243,8 +243,8 @@ namespace SqlDataReaderMapper
                 }
                 catch (Exception)
                 {
-                    throw new Exception($"Failed to apply the function of type {fieldMap.ManualBindFunc.GetType()}" +
-                        $"to the target value.");
+                    throw new Exception($"Failed to apply the function of type "
+                        + $"{fieldMap.ManualBindFunc.GetType()} to the target value.");
                 }
             }
             else
