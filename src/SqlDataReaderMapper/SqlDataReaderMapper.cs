@@ -230,14 +230,22 @@ namespace SqlDataReaderMapper
 
         private object PrepareTargetFieldValue(Type targetMemberType, MapperConfig fieldMap, int fieldNumber)
         {
-            // Set destination value and change its type if requested.
+            // Set the destination value and change its type if requested.
             object targetValue = _reader.GetValue(fieldNumber);
 
             // Either cast to a new type, or apply function.
             // NOTE: This part can be modified if you need both.
             if (fieldMap?.ManualBindFunc != null)
             {
-                targetValue = fieldMap.ManualBindFunc.Invoke(targetValue);
+                try
+                {
+                    targetValue = fieldMap.ManualBindFunc.Invoke(targetValue);
+                }
+                catch (Exception)
+                {
+                    throw new Exception($"Failed to apply the function of type {fieldMap.ManualBindFunc.GetType()}" +
+                        $"to the target value.");
+                }
             }
             else
             {

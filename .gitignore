@@ -9,3 +9,4 @@ Debug
 /src/SqlDataReaderMapper/obj
 /test/SqlDataReaderMapper.Tests/bin
 /test/SqlDataReaderMapper.Tests/obj
+/tools/nuget.bat

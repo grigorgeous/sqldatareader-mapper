@@ -18,7 +18,7 @@ namespace SqlDataReaderMapper.Tests
 
         protected IDataReader MockIDataReader<T>(T objectToEmulate) where T : class, new()
         {
-            // This var stores current position in 'ojectsToEmulate' list
+            // This variable stores current position in 'objectToEmulate' list
             var index = 0;
             bool readToggle = true;
 

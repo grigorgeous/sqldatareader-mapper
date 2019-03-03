@@ -7,6 +7,10 @@ using System.Threading.Tasks;
 
 namespace SqlDataReaderMapper
 {
+    /// <summary>
+    /// Reads the object and creates a map of its members.
+    /// </summary>
+    /// <typeparam name="T">Any instantiable class.</typeparam>
     public class ObjectReader<T> where T : class, new()
     {
         public T Value { get; private set; } = new T();
@@ -24,7 +28,7 @@ namespace SqlDataReaderMapper
                 return ((PropertyInfo)member).PropertyType;
             }
 
-            throw new ArgumentException("Input MemberInfo must be type FieldInfo or PropertyInfo");
+            throw new ArgumentException("Input MemberInfo must be type of PropertyInfo");
         }
 
         /// <summary>
