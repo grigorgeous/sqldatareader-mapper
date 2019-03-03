@@ -51,10 +51,15 @@ namespace SqlDataReaderMapper
 
         public object this[string name]
         {
-            get { return GetPropertyInfo(name).GetValue(Value, null); }
-            set { GetPropertyInfo(name).SetValue(Value, value, null); }
+            get { return GetPropertyInfo(name)?.GetValue(Value, null); }
+            set { GetPropertyInfo(name)?.SetValue(Value, value, null); }
         }
 
+        /// <summary>
+        /// Gets property info regardless its case.
+        /// </summary>
+        /// <param name="name">Property name.</param>
+        /// <returns>PropertyInfo object if found; otherwise, null.</returns>
         private PropertyInfo GetPropertyInfo(string name)
         {
             var realName = Members.FirstOrDefault(
