@@ -87,16 +87,16 @@ namespace SqlDataReaderMapper
         /// <summary>
         /// Maps one property to another in order their names are different.
         /// </summary>
-        /// <param name="fromProperty">Property in SqlDataReader.</param>
-        /// <param name="toProperty">Property in destination class.</param>
+        /// <param name="sourcePropertyName">Property in SqlDataReader.</param>
+        /// <param name="targetPropertyName">Property in destination class.</param>
         /// <returns></returns>
-        public SqlDataReaderMapper<T> ForMember(string fromProperty, string toProperty = null)
+        public SqlDataReaderMapper<T> ForMember(string sourcePropertyName, string targetPropertyName = null)
         {
             _config.Add(new MapperConfig()
             {
-                FromProperty = fromProperty,
-                NewType = null,
-                ToProperty = toProperty ?? fromProperty
+                SourcePropertyName = sourcePropertyName,
+                TargetType = null,
+                TargetPropertyName = targetPropertyName ?? sourcePropertyName
             });
 
             return this;
@@ -106,17 +106,18 @@ namespace SqlDataReaderMapper
         /// Maps property in SqlDataReader to the particular property in class.
         /// Converts SqlDataReader's value into new particular type.
         /// </summary>
-        /// <param name="fromProperty">Property in SqlDataReader.</param>
-        /// <param name="newType">New type for the property in destination class.</param>
-        /// <param name="toProperty">Property in destination class.</param>
+        /// <param name="sourcePropertyName">Property in SqlDataReader.</param>
+        /// <param name="targetType">New type for the property in destination class.</param>
+        /// <param name="targetPropertyName">Property in destination class.</param>
         /// <returns></returns>
         [Obsolete("This overload has been deprecated. Use generics to pass destination type instead.")]
-        public SqlDataReaderMapper<T> ForMember(string fromProperty, Type newType, string toProperty = null)
+        public SqlDataReaderMapper<T> ForMember(
+            string sourcePropertyName, Type targetType, string targetPropertyName = null)
         {
             _config.Add(new MapperConfig() {
-                FromProperty = fromProperty,
-                NewType = newType,
-                ToProperty = toProperty
+                SourcePropertyName = sourcePropertyName,
+                TargetType = targetType,
+                TargetPropertyName = targetPropertyName
             });
 
             return this;
@@ -127,19 +128,19 @@ namespace SqlDataReaderMapper
         /// Converts SqlDataReader's value into new particular type.
         /// </summary>
         /// <typeparam name="TTarget">Destination type</typeparam>
-        /// <param name="fromProperty">Property in SqlDataReader.</param>
-        /// <param name="toProperty">Property in destination class.</param>
+        /// <param name="sourcePropertyName">Property in SqlDataReader.</param>
+        /// <param name="targetPropertyName">Property in destination class.</param>
         /// <returns></returns>
-        public SqlDataReaderMapper<T> ForMember<TTarget>(string fromProperty, string toProperty = null)
+        public SqlDataReaderMapper<T> ForMember<TTarget>(string sourcePropertyName, string targetPropertyName = null)
         {
             if (!typeof(TTarget).IsTrulyPrimitive())
                 throw new ArgumentOutOfRangeException("The provided type is not a primitive or nullable type");
 
             _config.Add(new MapperConfig
             {
-                FromProperty = fromProperty,
-                NewType = typeof(TTarget),
-                ToProperty = toProperty
+                SourcePropertyName = sourcePropertyName,
+                TargetType = typeof(TTarget),
+                TargetPropertyName = targetPropertyName
             });
 
             return this;
@@ -149,32 +150,32 @@ namespace SqlDataReaderMapper
         /// Maps property in SqlDataReader to the particular property in class.
         /// Converts SqlDataReader's value the way you specify in manualBindFunc.
         /// </summary>
-        /// <param name="fromProperty">Property in SqlDataReader.</param>
+        /// <param name="sourcePropertyName">Property in SqlDataReader.</param>
         /// <param name="manualBindFunc">The way to process the sql value.</param>
-        /// <param name="toProperty">Property in destination class.</param>
+        /// <param name="targetPropertyName">Property in destination class.</param>
         /// <returns></returns>
         public SqlDataReaderMapper<T> ForMemberManual(
-            string fromProperty, Func<object, object> manualBindFunc, string toProperty = null)
+            string sourcePropertyName, Func<object, object> manualBindFunc, string targetPropertyName = null)
         {
             _config.Add(new MapperConfig
             {
-                FromProperty = fromProperty,
+                SourcePropertyName = sourcePropertyName,
                 ManualBindFunc = manualBindFunc,
-                ToProperty = toProperty
+                TargetPropertyName = targetPropertyName
             });
 
             return this;
         }
 
         /// <summary>
-        /// Change field type if possible.
+        /// Changes field type if possible.
         /// </summary>
         /// <param name="value">Source object.</param>
-        /// <param name="conversion">Destination object type.</param>
+        /// <param name="conversionType">Destination object type.</param>
         /// <returns></returns>
-        public static object ChangeType(object value, Type conversion)
+        public static object ChangeType(object value, Type conversionType)
         {
-            var type = conversion;
+            var type = conversionType;
 
             if (type.IsGenericType && type.GetGenericTypeDefinition().Equals(typeof(Nullable<>)))
             {
@@ -192,106 +193,106 @@ namespace SqlDataReaderMapper
             }
             catch (FormatException)
             {
-                throw new FormatException($"Cast from {value.GetType()} to {conversion} is not valid.");
+                throw new FormatException($"Cast from {value.GetType()} to {conversionType} is not valid.");
             }
         }
 
         private void ProcessFieldMapping()
         {
             MapperConfig fieldMap = null;
-            string destinationFieldName = PrepareDestinationFieldName(ref fieldMap);
+            string targetFieldName = PrepareTargetFieldName(ref fieldMap);
 
             // Find the destination member name and type.
-            var destMemberName = _typeObject.Members.FirstOrDefault(m => string.Equals(
-              m.Name, destinationFieldName, StringComparison.OrdinalIgnoreCase))?.Name;
+            var targetMemberName = _typeObject.Members.FirstOrDefault(m => string.Equals(
+              m.Name, targetFieldName, StringComparison.OrdinalIgnoreCase))?.Name;
 
-            if (destMemberName != null)
+            if (targetMemberName != null)
             {
-                var destMemberType = _typeObject.GetMemberType(destMemberName);
-                object destValue = PrepareDestinationFieldValue(destMemberType, fieldMap, _fieldNumber);
+                var targetMemberType = _typeObject.GetMemberType(targetMemberName);
+                object targetValue = PrepareTargetFieldValue(targetMemberType, fieldMap, _fieldNumber);
 
                 // Try to cast and assign the destination value to its destination field.
                 try
                 {
-                    _typeObject[destMemberName] = destValue;
+                    _typeObject[targetMemberName] = targetValue;
                 }
                 catch (InvalidCastException)
                 {
                     throw new InvalidCastException(
-                        $"Cast from {destValue.GetType()} to {destMemberType} is not valid");
+                        $"Cast from {targetValue.GetType()} to {targetMemberType} is not valid");
                 }
             }
             else
             {
-                throw new MemberAccessException($"{destinationFieldName} not found in destination object");
+                throw new MemberAccessException($"{targetFieldName} not found in destination object");
             }
         }
 
-        private object PrepareDestinationFieldValue(Type destMemberType, MapperConfig fieldMap, int fieldNumber)
+        private object PrepareTargetFieldValue(Type targetMemberType, MapperConfig fieldMap, int fieldNumber)
         {
             // Set destination value and change its type if requested.
-            object destValue = _reader.GetValue(fieldNumber);
+            object targetValue = _reader.GetValue(fieldNumber);
 
             // Either cast to a new type, or apply function.
-            // NOTE: This part can be modified in order you need both.
+            // NOTE: This part can be modified if you need both.
             if (fieldMap?.ManualBindFunc != null)
             {
-                destValue = fieldMap.ManualBindFunc.Invoke(destValue);
+                targetValue = fieldMap.ManualBindFunc.Invoke(targetValue);
             }
             else
             {
-                var destType = fieldMap?.NewType ?? destMemberType;
-                destValue = ChangeType(_reader.GetValue(fieldNumber), destType);
+                var targetType = fieldMap?.TargetType ?? targetMemberType;
+                targetValue = ChangeType(_reader.GetValue(fieldNumber), targetType);
             }
 
             // Apply trim for a destination string value if requested.
-            if (fieldMap?.Trim == true && (destValue.GetType() == typeof(string)))
+            if (fieldMap?.Trim == true && (targetValue.GetType() == typeof(string)))
             {
-                destValue = (destValue as string)?.Trim();
+                targetValue = (targetValue as string)?.Trim();
             }
 
-            return destValue;
+            return targetValue;
         }
 
-        private string PrepareDestinationFieldName(ref MapperConfig fieldMap)
+        private string PrepareTargetFieldName(ref MapperConfig fieldMap)
         {
             // Get source field name from SqlDataReader.
             string sourceFieldName = _reader.GetName(_fieldNumber);
 
             // Check whether we have a configuration for this field name and modify the name
             // if destination field name was provided. Otherwise, use source field name.
-            fieldMap = _config.Find(m => m.FromProperty == sourceFieldName);
-            string destFieldName = fieldMap?.ToProperty ?? sourceFieldName;
+            fieldMap = _config.Find(m => m.SourcePropertyName == sourceFieldName);
+            string targetFieldName = fieldMap?.TargetPropertyName ?? sourceFieldName;
 
             // Apply name transformers if any.
-            destFieldName = ApplyNameTransformers(destFieldName);
+            targetFieldName = ApplyNameTransformers(targetFieldName);
 
-            return destFieldName;
+            return targetFieldName;
         }
 
-        private string ApplyNameTransformers(string destFieldName)
+        private string ApplyNameTransformers(string targetFieldName)
         {
-            if (_nameModifier != null && !_typeObject.Members.Any(m => m.Name == destFieldName))
+            if (_nameModifier != null && !_typeObject.Members.Any(m => m.Name == targetFieldName))
             {
-                destFieldName = destFieldName.Replace(_nameModifier.Item1, _nameModifier.Item2);
+                targetFieldName = targetFieldName.Replace(_nameModifier.Item1, _nameModifier.Item2);
             }
 
-            return destFieldName;
+            return targetFieldName;
         }
 
         /// <summary>
-        /// ReaderMapper configuration.
+        /// SqlDataReaderMapper configuration.
         /// </summary>
         internal class MapperConfig
         {
             // Source property name.
-            public string FromProperty { get; set; }
+            public string SourcePropertyName { get; set; }
 
             // New type for the destination value.
-            public Type NewType { get; set; }
+            public Type TargetType { get; set; }
 
             // Destination property name.
-            public string ToProperty { get; set; }
+            public string TargetPropertyName { get; set; }
 
             // String trim flag.
             public bool Trim { get; set; }
