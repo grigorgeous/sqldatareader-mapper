@@ -68,6 +68,31 @@ namespace SqlDataReaderMapper.Tests
         }
 
         [TestMethod]
+        public void ObjectMappingWithLowercaseFieldNamesTest()
+        {
+            // Assign
+            var mappedObject = new DTOObject();
+            var moqDataReader = MockIDataReader(new DTOObjectWithLowercaseFieldNames
+            {
+                Userid = 5,
+                Firstname = "John",
+                Lastname = "Smith"
+            });
+
+            // Act
+            while (moqDataReader.Read())
+            {
+                mappedObject = new SqlDataReaderMapper<DTOObject>(moqDataReader)
+                    .Build();
+            }
+
+            // Assert
+            mappedObject.UserId.ShouldBe(5);
+            mappedObject.FirstName.ShouldBe("John");
+            mappedObject.LastName.ShouldBe("Smith");
+        }
+
+        [TestMethod]
         public void ObjectMappingWithForMemberMapByFieldNameTest()
         {
             // Assign

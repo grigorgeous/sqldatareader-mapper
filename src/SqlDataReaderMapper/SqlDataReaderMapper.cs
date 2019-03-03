@@ -269,7 +269,9 @@ namespace SqlDataReaderMapper
 
             // Check whether we have a configuration for this field name and modify the name
             // if destination field name was provided. Otherwise, use source field name.
-            fieldMap = _config.Find(m => m.SourcePropertyName == sourceFieldName);
+            fieldMap = _config.Find(m => string.Equals(
+                m.SourcePropertyName, sourceFieldName, StringComparison.OrdinalIgnoreCase));
+
             string targetFieldName = fieldMap?.TargetPropertyName ?? sourceFieldName;
 
             // Apply name transformers if any.

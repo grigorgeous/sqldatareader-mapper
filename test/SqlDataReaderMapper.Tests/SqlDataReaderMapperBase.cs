@@ -80,6 +80,13 @@ namespace SqlDataReaderMapper.Tests
             public string SurName { get; set; }
         }
 
+        internal class DTOObjectWithLowercaseFieldNames
+        {
+            public int Userid { get; set; }
+            public string Firstname { get; set; }
+            public string Lastname { get; set; }
+        }
+
         internal class DTOObjectWithDifferentNameAndType
         {
             public string UserCode { get; set; }
