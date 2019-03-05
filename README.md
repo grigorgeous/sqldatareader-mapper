@@ -24,7 +24,7 @@ Then, use the library in the project:
 ```
 Here is an example of the usage:
 ```csharp
-    var mappedObject = new SqlDataReaderMapper<DBClass>(reader)
+    var mappedObject = new SqlDataReaderMapper<DTOObject>(reader)
          .NameTransformers("_", "")
          .ForMember<int>("CurrencyId")
          .ForMember("CurrencyCode", "Code")
@@ -35,7 +35,7 @@ Here is an example of the usage:
 ```
 Or simply:
 ```csharp
-    var mappedObject = new SqlDataReaderMapper<DBClass>(reader)
+    var mappedObject = new SqlDataReaderMapper<DTOObject>(reader)
          .Build();
 ```
 Either commands, from Package Manager Console or .NET Core CLI, will download and install SqlDataReaderMapper and all required dependencies.
