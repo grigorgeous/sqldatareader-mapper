@@ -1,10 +1,10 @@
-﻿SqlDataReader mapper
+SqlDataReader mapper
 ======
 [![NuGet](https://img.shields.io/nuget/dt/sqldatareadermapper.svg)](https://www.nuget.org/packages/SqlDataReaderMapper) 
 [![NuGet](https://img.shields.io/nuget/vpre/sqldatareadermapper.svg)](https://www.nuget.org/packages/SqlDataReaderMapper)
 [![Build status](https://ci.appveyor.com/api/projects/status/g3374w24gq6rxhko/branch/master?svg=true)](https://ci.appveyor.com/project/grigorgeous/sqldatareader-mapper/branch/master)
 
-Simple C# SqlDataReader object mapper. Allows you to map a SqlDataReader to the particular objects.
+Simple C# SqlDataReader object mapper. Allows you to map a SqlDataReader to the particular class.
 
 Supports simple property mapping, property name transformations, string trimming, manual property binding by name, type changing, function binding, etc.
 
