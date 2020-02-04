@@ -299,5 +299,24 @@ namespace SqlDataReaderMapper.Tests
                     .Build();
             }
         }
+
+        [TestMethod]
+        public void ObjectMappingWithInvalidCastIgnoresException()
+        {
+            // Assign
+            var mappedObject = new DTOObject();
+            var moqDataReader = MockIDataReader(new DTOObjectWithDifferentNameAndType
+            {
+                UserCode = "XYZ",
+            });
+
+            // Act
+            while (moqDataReader.Read())
+            {
+                mappedObject = new SqlDataReaderMapper<DTOObject>(moqDataReader)
+                    .ForMember("UserCode").Trim()
+                    .Build(true);
+            }
+        }
     }
 }

@@ -38,13 +38,13 @@ namespace SqlDataReaderMapper
         /// Builds an object of type T with all the rules defined before.
         /// </summary>
         /// <returns></returns>
-        public T Build()
+        public T Build(bool ignoreMissingTargetFields = false)
         {
             for (_fieldNumber = 0; _fieldNumber < _reader.FieldCount; _fieldNumber++)
             {
                 if (!_reader.IsDBNull(_fieldNumber))
                 {
-                    ProcessFieldMapping(); 
+                    ProcessFieldMapping(ignoreMissingTargetFields); 
                 }
             }
 
@@ -197,7 +197,7 @@ namespace SqlDataReaderMapper
             }
         }
 
-        private void ProcessFieldMapping()
+        private void ProcessFieldMapping(bool ignoreMissingTargetFields)
         {
             MapperConfig fieldMap = null;
             string targetFieldName = PrepareTargetFieldName(ref fieldMap);
@@ -224,7 +224,10 @@ namespace SqlDataReaderMapper
             }
             else
             {
-                throw new MemberAccessException($"{targetFieldName} not found in destination object");
+                if (!ignoreMissingTargetFields)
+                {
+                    throw new MemberAccessException($"{targetFieldName} not found in destination object");
+                }
             }
         }
 
