@@ -15,7 +15,7 @@ namespace SqlDataReaderMapper.Tests
     public class SqlDataReaderMapperTest : SqlDataReaderMapperBase
     {
         [TestMethod]
-        public void ObjectMappingWithoudConditionsTest()
+        public void ObjectMappingWithoutConditionsTest()
         {
             // Assign
             var moqDataReader = MockIDataReader(new DTOObject {
@@ -253,7 +253,7 @@ namespace SqlDataReaderMapper.Tests
             while (moqDataReader.Read())
             {
                 mappedObject = new SqlDataReaderMapper<DTOObject>(moqDataReader)
-                    .ForMember<Boolean>("UserCode", "UserId")
+                    .ForMember<bool>("UserCode", "UserId")
                     .Build();
             }
         }
@@ -296,6 +296,26 @@ namespace SqlDataReaderMapper.Tests
             {
                 mappedObject = new SqlDataReaderMapper<DTOObject>(moqDataReader)
                     .ForMember("UserCode").Trim()
+                    .Build();
+            }
+        }
+
+        [TestMethod]
+        public void ObjectMappingWithInvalidCastIgnoresException()
+        {
+            // Assign
+            var mappedObject = new DTOObject();
+            var moqDataReader = MockIDataReader(new DTOObjectWithDifferentNameAndType
+            {
+                UserCode = "XYZ",
+            });
+
+            // Act
+            while (moqDataReader.Read())
+            {
+                mappedObject = new SqlDataReaderMapper<DTOObject>(moqDataReader)
+                    .ForMember("UserCode").Trim()
+                    .IgnoreAllNonExisting()
                     .Build();
             }
         }
