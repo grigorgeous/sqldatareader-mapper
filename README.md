@@ -29,6 +29,7 @@ Here is an example of the usage:
 ```csharp
     var mappedObject = new SqlDataReaderMapper<UserDto>(reader)
          .NameTransformers("_", "")
+         .IgnoreAllNonExisting()
          .ForMember<int>("CurrencyId")
          .ForMember("CurrencyCode", "Code")
          .ForMember<string>("CreatedByUser", "User").Trim()
