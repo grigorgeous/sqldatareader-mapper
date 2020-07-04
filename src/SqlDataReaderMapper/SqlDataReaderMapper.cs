@@ -13,6 +13,7 @@ namespace SqlDataReaderMapper
     /// <example>
     /// var mappedObject = new SqlDataReaderMapper<DBRes>(reader)
     ///     .NameTransformers("_", "")
+    ///     .IgnoreAllNonExisting()
     ///     .ForMember<int>("CurrencyId")
     ///     .ForMember<Boolean>("IsModerator")
     ///     .ForMember("CurrencyCode", "Code")
@@ -28,6 +29,7 @@ namespace SqlDataReaderMapper
         private Tuple<string, string> _nameModifier;
         private ObjectReader<T> _typeObject = new ObjectReader<T>().CreateObjectMap();
         private int _fieldNumber;
+        private bool _ignoreAllNonExisting;
 
         public SqlDataReaderMapper(IDataReader reader)
         {
@@ -80,6 +82,17 @@ namespace SqlDataReaderMapper
             {
                 lastMapperConfig.Trim = true;
             }
+
+            return this;
+        }
+
+        /// <summary>
+        /// Ignore all non-existing properties in destination class.
+        /// </summary>
+        /// <returns></returns>
+        public SqlDataReaderMapper<T> IgnoreAllNonExisting()
+        {
+            _ignoreAllNonExisting = true;
 
             return this;
         }
@@ -224,7 +237,10 @@ namespace SqlDataReaderMapper
             }
             else
             {
-                throw new MemberAccessException($"{targetFieldName} not found in destination object");
+                if (!_ignoreAllNonExisting)
+                {
+                    throw new MemberAccessException($"{targetFieldName} not found in destination object");
+                }
             }
         }
 

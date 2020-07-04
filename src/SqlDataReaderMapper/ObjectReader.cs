@@ -50,6 +50,9 @@ namespace SqlDataReaderMapper
 
             }
 
+            if (Members.Count == 0)
+                throw new MemberAccessException($"The target class {typeof(T).Name} doesn't have any property.");
+
             return this;
         }
 
