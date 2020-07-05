@@ -10,12 +10,16 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <license type="file">LICENSE</license>
     <projectUrl>https://github.com/grigorgeous/sqldatareader-mapper/</projectUrl>
-    <iconUrl>https://secure.gravatar.com/avatar/de7901ed29f40e8088befecbdda32fd8</iconUrl>
+    <icon>icon.png</icon>
     <description>Simple C# SqlDataReader object mapper. Allows you to map a SqlDataReader to the particular objects. Supports simple property mapping, property name transformations, string trimming, manual property binding by name, type changing, function binding, etc.</description>
     <tags>sqldatareader datareader reader mapper mapping map object idatareader</tags>
+    <dependencies>
+      <group targetFramework=".NETFramework4.6.1" />
+    </dependencies>
   </metadata>
   <files>
     <file src="bin\Release\SqlDataReaderMapper.dll" target="lib\net461\SqlDataReaderMapper.dll" />
     <file src="..\..\LICENSE" target="LICENSE" />
+    <file src="..\..\images\icon.png" target="" />
   </files>
 </package>

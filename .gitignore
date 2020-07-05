@@ -1,8 +1,11 @@
 v15
 Debug
+/images
 /.axoCover
 /TestResults
 /lib/net461
+/lib/net451
+/lib/net45
 /packages
 /.vs
 /src/SqlDataReaderMapper/bin
